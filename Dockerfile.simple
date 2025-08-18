@@ -1,0 +1,29 @@
+# Dockerfile simples que usa JAR já buildado
+FROM eclipse-temurin:17-jre-alpine
+
+# Configurar usuário não-root para segurança
+RUN addgroup -g 1001 -S spring && \
+    adduser -u 1001 -S spring -G spring
+
+WORKDIR /app
+
+# Copiar JAR já buildado
+COPY target/comprae-produto-service-1.0.0.jar app.jar
+
+# Alterar propriedade do arquivo para o usuário criado
+RUN chown spring:spring app.jar
+
+USER spring:spring
+
+# Expor porta da aplicação
+EXPOSE 8082
+
+# Configurações de JVM otimizadas
+ENV JAVA_OPTS="-Xmx512m -Xms256m -XX:+UseG1GC -XX:+UseStringDeduplication"
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=60s --retries=3 \
+    CMD wget --no-verbose --tries=1 --spider http://localhost:8082/actuator/health || exit 1
+
+# Comando para executar a aplicação
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]
