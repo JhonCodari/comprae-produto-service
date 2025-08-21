@@ -79,7 +79,7 @@
             <version>7.4</version>
         </dependency>
 
-        <!-- Config Client SDK via JitPack -->
+        <!-- Config Client SDK via Local Install (temporário) -->
         <dependency>
             <groupId>com.github.JonatasSilvaDev</groupId>
             <artifactId>comprae-client-sdk</artifactId>
@@ -119,12 +119,14 @@
         </dependency>
     </dependencies>
 
+    <!-- Repositórios temporariamente removidos para usar versão local
     <repositories>
         <repository>
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
     </repositories>
+    -->
 
     <dependencyManagement>
         <dependencies>
