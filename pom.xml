@@ -83,7 +83,7 @@
         <dependency>
             <groupId>com.github.JonatasSilvaDev</groupId>
             <artifactId>comprae-client-sdk</artifactId>
-            <version>1.0.0</version>
+            <version>1.0.1</version>
         </dependency>        
 
         <!-- Test Dependencies -->
@@ -119,14 +119,12 @@
         </dependency>
     </dependencies>
 
-    <!-- Repositórios temporariamente removidos para usar versão local
     <repositories>
         <repository>
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
     </repositories>
-    -->
 
     <dependencyManagement>
         <dependencies>

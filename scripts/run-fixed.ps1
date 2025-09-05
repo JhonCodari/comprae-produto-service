@@ -28,7 +28,6 @@ function Start-Dev {
     Write-Host "   - H2 Console: http://localhost:8080/h2-console" -ForegroundColor Gray
     Write-Host ""
     
-    Set-Location "$PSScriptRoot\.."
     mvn spring-boot:run -D"spring-boot.run.profiles=dev"
 }
 
@@ -39,34 +38,29 @@ function Start-Docker {
     Write-Host "   - Swagger UI: http://localhost:8080/swagger-ui.html" -ForegroundColor Gray
     Write-Host ""
     
-    Set-Location "$PSScriptRoot\.."
-    
     # Verificar se o JAR existe
     if (-not (Test-Path "target\comprae-produto-service-1.0.0.jar")) {
         Write-Host "Compilando aplicacao..." -ForegroundColor Yellow
         mvn clean package -DskipTests
     }
 
-    docker-compose -f docker-compose.yml up -d
+    docker-compose -f ../docker-compose.yml up -d
     Write-Host "Servicos iniciados!" -ForegroundColor Green
 }
 
 function Start-Tests {
     Write-Host "Executando testes..." -ForegroundColor Green
-    Set-Location "$PSScriptRoot\.."
     mvn test
 }
 
 function Start-Build {
     Write-Host "Compilando aplicacao..." -ForegroundColor Green
-    Set-Location "$PSScriptRoot\.."
     mvn clean package -DskipTests
     Write-Host "Compilacao concluida!" -ForegroundColor Green
 }
 
 function Start-Clean {
     Write-Host "Limpando arquivos compilados..." -ForegroundColor Green
-    Set-Location "$PSScriptRoot\.."
     mvn clean
     Write-Host "Limpeza concluida!" -ForegroundColor Green
 }
