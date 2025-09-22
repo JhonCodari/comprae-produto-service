@@ -23,7 +23,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * Testes de integração para o controlador de produtos
  */
-@WebMvcTest(ProdutoController.class)
+@WebMvcTest(controllers = ProdutoController.class, 
+            excludeAutoConfiguration = {org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration.class})
 @DisplayName("Testes do Controlador de Produtos")
 class ProdutoControllerTest {
 

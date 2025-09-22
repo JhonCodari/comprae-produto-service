@@ -5,10 +5,12 @@ import br.com.comprae.produto.aplicacao.dtos.ProdutoDto;
 import br.com.comprae.produto.aplicacao.mappers.ProdutoMapper;
 import br.com.comprae.produto.dominio.entidades.Produto;
 import br.com.comprae.produto.infraestrutura.repositorios.ProdutoRepositorio;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -33,8 +35,15 @@ class ProdutoServiceTest {
     @Mock
     private ProdutoMapper produtoMapper;
 
-    @InjectMocks
+    private MeterRegistry meterRegistry;
     private ProdutoService produtoService;
+
+    @BeforeEach
+    void setUp() {
+        // Use SimpleMeterRegistry for tests instead of mock
+        meterRegistry = new SimpleMeterRegistry();
+        produtoService = new ProdutoService(produtoRepositorio, produtoMapper, meterRegistry);
+    }
 
     @Test
     @DisplayName("Deve criar produto com sucesso")

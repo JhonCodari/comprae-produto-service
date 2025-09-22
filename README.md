@@ -38,7 +38,7 @@ O Compraê Produto Service é responsável por gerenciar todos os produtos do ec
 - **Swagger/OpenAPI 3**
 - **JUnit 5**
 - **Lombok**
-- **Compraê Config Client SDK** (configuração centralizada)
+- **Compraê Config Client SDK v1.1.1** (configuração centralizada com cache inteligente)
 - **Apache Kafka** (eventos e notificações)
 - **Redis** (cache)
 
@@ -104,13 +104,36 @@ public class ProdutoService {
 }
 ```
 
-### 📡 Endpoints de Configuração
+### � Novidades SDK v1.1.1
+
+O serviço agora utiliza a versão mais recente do Compraê Config Client SDK com melhorias significativas:
+
+#### 🎯 Cache Inteligente
+- **TTL Automático**: Cache com expiração de 30 minutos
+- **Eviction Policy**: Máximo de 10.000 entradas com remoção automática
+- **Performance**: Até 270 operações/ms em cache sequencial
+- **Estatísticas**: Métricas detalhadas de hit/miss ratio
+
+#### 🔍 Validação Avançada
+- **16 Tipos Suportados**: String, Integer, Boolean, Duration, LocalDate, etc.
+- **Validação Regex**: Email, URL, IP, porta automáticas
+- **Conversores Personalizados**: Extensível para tipos customizados
+- **Performance**: Até 2.600 conversões/ms
+
+#### 📊 Monitoramento
+- **Health Checks**: Verificação automática de saúde do cache
+- **Métricas**: Integração com Micrometer para observabilidade
+- **Logging**: Sistema de logs estruturado com diferentes níveis
+
+### �📡 Endpoints de Configuração
 
 - `GET /api/v1/configuracoes` - Lista todas as configurações
 - `GET /api/v1/configuracoes/{chave}` - Busca configuração específica
 - `POST /api/v1/configuracoes/{chave}/atualizar` - Atualiza configuração
 - `GET /api/v1/configuracoes/status` - Status do servidor de configuração
 - `DELETE /api/v1/configuracoes/cache` - Limpa cache local
+- `GET /api/v1/configuracoes/health` - **NOVO**: Health check do cache
+- `GET /api/v1/configuracoes/metrics` - **NOVO**: Métricas de performance
 
 ## 🛠️ Como Executar
 
