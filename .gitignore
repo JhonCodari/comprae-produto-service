@@ -13,7 +13,6 @@
 # Package Files #
 *.jar
 *.war
-ARQUITETURA_MICROSERVICOS.md
 *.nar
 *.ear
 *.zip
@@ -60,8 +59,3 @@ logs/
 
 # Application specific
 application-local.properties
-
-# Arquivos de correções e notas locais
-CORRECOES-LOCAIS.md
-NOTAS-*.md
-correções-*.md
