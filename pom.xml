@@ -79,6 +79,12 @@
             <version>7.4</version>
         </dependency>
 
+        <!-- Jackson JSR310 para suporte a LocalDateTime -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+        </dependency>
+
         <!-- Config Client SDK via Local Install (temporário) -->
         <dependency>
             <groupId>com.github.JonatasSilvaDev</groupId>
