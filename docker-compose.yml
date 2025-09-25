@@ -3,7 +3,7 @@ version: '3.8'
 services:
   postgres:
     image: postgres:15-alpine
-    container_name: comprae-postgres
+    container_name: postgres-produto
     environment:
       POSTGRES_DB: comprae_produtos
       POSTGRES_USER: admin
@@ -21,7 +21,7 @@ services:
     container_name: comprae-produto-service
     environment:
       SPRING_PROFILES_ACTIVE: docker
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/comprae_produtos
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-produto:5432/comprae_produtos
       SPRING_DATASOURCE_USERNAME: admin
       SPRING_DATASOURCE_PASSWORD: admin123
     ports:
@@ -36,4 +36,4 @@ volumes:
 
 networks:
   comprae-network:
-    driver: bridge
+    external: true
