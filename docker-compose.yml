@@ -1,38 +1,20 @@
 version: '3.8'
 
 services:
-  postgres:
-    image: postgres:15-alpine
-    container_name: postgres-produto
-    environment:
-      POSTGRES_DB: comprae_produtos
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: admin123
-      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=pt_BR.UTF-8"
-    ports:
-      - "5433:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    networks:
-      - comprae-network
-
   produto-service:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.simple
     container_name: comprae-produto-service
     environment:
       SPRING_PROFILES_ACTIVE: docker
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-produto:5432/comprae_produtos
+      SPRING_DATASOURCE_URL: jdbc:postgresql://comprae-postgres-produto:5432/comprae_produtos
       SPRING_DATASOURCE_USERNAME: admin
       SPRING_DATASOURCE_PASSWORD: admin123
     ports:
       - "8081:8080"
-    depends_on:
-      - postgres
     networks:
       - comprae-network
-
-volumes:
-  postgres_data:
 
 networks:
   comprae-network:

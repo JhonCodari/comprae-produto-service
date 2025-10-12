@@ -7,16 +7,19 @@ RUN addgroup -g 1001 -S spring && \
 
 WORKDIR /app
 
+# Criar diretório de logs
+RUN mkdir -p logs
+
 # Copiar JAR já buildado
-COPY target/comprae-produto-service-1.0.0.jar app.jar
+COPY target/comprae-produto-service-2.0.0.jar app.jar
 
 # Alterar propriedade do arquivo para o usuário criado
-RUN chown spring:spring app.jar
+RUN chown -R spring:spring app.jar logs
 
 USER spring:spring
 
-# Expor porta da aplicação
-EXPOSE 8082
+# Expor porta da aplicação  
+EXPOSE 8080
 
 # Configurações de JVM otimizadas
 ENV JAVA_OPTS="-Xmx512m -Xms256m -XX:+UseG1GC -XX:+UseStringDeduplication"

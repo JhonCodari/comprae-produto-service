@@ -21,6 +21,10 @@ RUN addgroup -g 1001 -S spring && \
 
 WORKDIR /app
 
+# Criar diretório para logs
+RUN mkdir -p logs && \
+    chown spring:spring logs
+
 # Copiar apenas o JAR da aplicação do stage anterior
 COPY --from=builder /app/target/comprae-produto-service-*.jar app.jar
 

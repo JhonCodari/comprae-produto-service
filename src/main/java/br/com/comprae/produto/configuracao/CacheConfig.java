@@ -14,6 +14,8 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
@@ -96,5 +98,37 @@ public class CacheConfig {
                         .fromSerializer(new GenericJackson2JsonRedisSerializer()))
                 .prefixCacheNameWith("produto-service:")
                 .disableCachingNullValues();
+    }
+
+    /**
+     * RedisTemplate para operações gerais no Redis
+     */
+    @Bean
+    @ConditionalOnProperty(name = "spring.data.redis.host")
+    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
+        logger.info("Configurando RedisTemplate para produto-service");
+        
+        RedisTemplate<String, Object> template = new RedisTemplate<>();
+        template.setConnectionFactory(connectionFactory);
+        
+        // Configuração de serializers
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setHashKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
+        template.setHashValueSerializer(new GenericJackson2JsonRedisSerializer());
+        
+        template.afterPropertiesSet();
+        return template;
+    }
+
+    /**
+     * StringRedisTemplate para operações com strings
+     */
+    @Bean
+    @ConditionalOnProperty(name = "spring.data.redis.host")
+    public StringRedisTemplate stringRedisTemplate(RedisConnectionFactory connectionFactory) {
+        logger.info("Configurando StringRedisTemplate para produto-service");
+        
+        return new StringRedisTemplate(connectionFactory);
     }
 }
