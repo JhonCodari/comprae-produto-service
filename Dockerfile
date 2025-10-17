@@ -1,18 +1,4 @@
-# Dockerfile multi-stage para build e execução
-# Stage 1: Build da aplicação
-FROM maven:3.9.11-eclipse-temurin-17-alpine AS builder
-
-WORKDIR /app
-
-# Copiar pom.xml e baixar dependências (cache layer)
-COPY pom.xml .
-RUN mvn dependency:go-offline -B
-
-# Copiar código fonte e fazer build
-COPY src src
-RUN mvn clean package -DskipTests
-
-# Stage 2: Runtime
+# Dockerfile simples que usa JAR já buildado
 FROM eclipse-temurin:17-jre-alpine
 
 # Configurar usuário não-root para segurança
@@ -21,19 +7,18 @@ RUN addgroup -g 1001 -S spring && \
 
 WORKDIR /app
 
-# Criar diretório para logs
-RUN mkdir -p logs && \
-    chown spring:spring logs
+# Criar diretório de logs
+RUN mkdir -p logs
 
-# Copiar apenas o JAR da aplicação do stage anterior
-COPY --from=builder /app/target/comprae-produto-service-*.jar app.jar
+# Copiar JAR já buildado
+COPY target/comprae-produto-service-2.0.0.jar app.jar
 
 # Alterar propriedade do arquivo para o usuário criado
-RUN chown spring:spring app.jar
+RUN chown -R spring:spring app.jar logs
 
 USER spring:spring
 
-# Expor porta da aplicação
+# Expor porta da aplicação  
 EXPOSE 8082
 
 # Configurações de JVM otimizadas

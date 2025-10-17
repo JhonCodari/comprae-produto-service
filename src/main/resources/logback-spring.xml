@@ -4,18 +4,11 @@
     <!-- Include Spring Boot's default configuration -->
     <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
     
-    <!-- Define log patterns -->
+    <!-- Define console log pattern -->
     <property name="CONSOLE_LOG_PATTERN" 
               value="%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>
-    
-    <property name="FILE_LOG_PATTERN" 
-              value="%d{yyyy-MM-dd HH:mm:ss.SSS} ${LOG_LEVEL_PATTERN:-%5p} ${PID:- } --- [%t] %-40.40logger{39} : %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>
-    
-    <!-- JSON pattern for structured logging -->
-    <property name="JSON_LOG_PATTERN" 
-              value='{"timestamp":"%d{yyyy-MM-dd HH:mm:ss.SSS}","level":"%level","thread":"%thread","logger":"%logger","message":"%message","mdc":%X,"exception":"%ex{full}"}%n'/>
 
-    <!-- Console Appender -->
+    <!-- Console Appender - Only logging method -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>${CONSOLE_LOG_PATTERN}</pattern>
@@ -23,81 +16,15 @@
         </encoder>
     </appender>
 
-    <!-- File Appender for general logs -->
-    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>logs/comprae-produto-service.log</file>
-        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>logs/comprae-produto-service.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-            <maxFileSize>100MB</maxFileSize>
-            <maxHistory>30</maxHistory>
-            <totalSizeCap>3GB</totalSizeCap>
-        </rollingPolicy>
-        <encoder>
-            <pattern>${FILE_LOG_PATTERN}</pattern>
-            <charset>UTF-8</charset>
-        </encoder>
-    </appender>
-
-    <!-- JSON File Appender for structured logging -->
-    <appender name="JSON_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>logs/comprae-produto-service.json</file>
-        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>logs/comprae-produto-service.%d{yyyy-MM-dd}.%i.json</fileNamePattern>
-            <maxFileSize>100MB</maxFileSize>
-            <maxHistory>30</maxHistory>
-            <totalSizeCap>3GB</totalSizeCap>
-        </rollingPolicy>
-        <encoder>
-            <pattern>${JSON_LOG_PATTERN}</pattern>
-            <charset>UTF-8</charset>
-        </encoder>
-    </appender>
-
-    <!-- Error File Appender -->
-    <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>logs/comprae-produto-service-error.log</file>
-        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>ERROR</level>
-        </filter>
-        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>logs/comprae-produto-service-error.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-            <maxFileSize>50MB</maxFileSize>
-            <maxHistory>30</maxHistory>
-            <totalSizeCap>1GB</totalSizeCap>
-        </rollingPolicy>
-        <encoder>
-            <pattern>${FILE_LOG_PATTERN}</pattern>
-            <charset>UTF-8</charset>
-        </encoder>
-    </appender>
-
-    <!-- Async Appender for better performance -->
-    <appender name="ASYNC_FILE" class="ch.qos.logback.classic.AsyncAppender">
-        <appender-ref ref="FILE"/>
-        <queueSize>1000</queueSize>
-        <discardingThreshold>20</discardingThreshold>
-        <includeCallerData>false</includeCallerData>
-    </appender>
-
-    <appender name="ASYNC_JSON_FILE" class="ch.qos.logback.classic.AsyncAppender">
-        <appender-ref ref="JSON_FILE"/>
-        <queueSize>1000</queueSize>
-        <discardingThreshold>20</discardingThreshold>
-        <includeCallerData>false</includeCallerData>
-    </appender>
-
-    <!-- Spring profiles configuration -->
+    <!-- All profiles use only console logging -->
     <springProfile name="dev">
         <root level="INFO">
             <appender-ref ref="CONSOLE"/>
-            <appender-ref ref="ASYNC_FILE"/>
-            <appender-ref ref="ERROR_FILE"/>
         </root>
         
         <!-- Application specific loggers -->
         <logger name="br.com.comprae.produto" level="DEBUG" additivity="false">
             <appender-ref ref="CONSOLE"/>
-            <appender-ref ref="ASYNC_FILE"/>
         </logger>
         
         <!-- Cache and Redis logging -->
@@ -117,14 +44,11 @@
     <springProfile name="docker">
         <root level="INFO">
             <appender-ref ref="CONSOLE"/>
-            <appender-ref ref="ASYNC_JSON_FILE"/>
-            <appender-ref ref="ERROR_FILE"/>
         </root>
         
         <!-- Application specific loggers -->
         <logger name="br.com.comprae.produto" level="INFO" additivity="false">
             <appender-ref ref="CONSOLE"/>
-            <appender-ref ref="ASYNC_JSON_FILE"/>
         </logger>
         
         <!-- Reduced logging for production-like environment -->
@@ -153,17 +77,15 @@
         <logger name="org.testcontainers" level="INFO"/>
     </springProfile>
 
-    <!-- Default configuration (prod-like) -->
+    <!-- Default configuration (prod-like) - Only console -->
     <springProfile name="!dev &amp; !docker &amp; !test">
         <root level="INFO">
-            <appender-ref ref="ASYNC_JSON_FILE"/>
-            <appender-ref ref="ERROR_FILE"/>
+            <appender-ref ref="CONSOLE"/>
         </root>
         
         <!-- Application specific loggers -->
         <logger name="br.com.comprae.produto" level="INFO" additivity="false">
-            <appender-ref ref="ASYNC_JSON_FILE"/>
-            <appender-ref ref="ERROR_FILE"/>
+            <appender-ref ref="CONSOLE"/>
         </logger>
         
         <!-- Production logging levels -->
